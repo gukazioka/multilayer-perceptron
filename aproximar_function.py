@@ -63,7 +63,7 @@ while errotolerado < errototal:
 
     for padrao in range(amostras):
         for j in range(neur):
-            zin2[0][j]=np.dot(x[padrao,:], vanterior[:,j]) + v0anterior[0][j]
+            zin[0][j]=np.dot(x[padrao,:], vanterior[:,j]) + v0anterior[0][j]
         z=np.tanh(zin)
         yin=np.dot(z,wanterior) + w0anterior
         y=np.tanh(yin)
@@ -110,7 +110,7 @@ while errotolerado < errototal:
 
     for i in range(amostras):
         for j in range(neur):
-            zin[0][j]=np.dot(x[i,:], vanterior[:,j]) + v0anterior[0][j]
+            zin2[0][j]=np.dot(x[i,:], vanterior[:,j]) + v0anterior[0][j]
             z2 = np.tanh(zin2)
         yin2 = np.dot(z2,wanterior) + w0anterior
         y2 = np.tanh(yin2)

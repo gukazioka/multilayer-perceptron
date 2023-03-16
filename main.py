@@ -33,38 +33,44 @@ class App(tk.Tk):
         self.max_x_entry = ttk.Entry(self.input_frame, font=("Helvetica", 13))
         self.max_x_entry.grid(row=2, column=1, padx=5, pady=5, sticky="w")
 
+        self.tolerated_error_label = ttk.Label(self.input_frame, text="Erro Tolerado:", font=("Helvetica", 13))
+        self.tolerated_error_label.grid(row=3, column=0, padx=5, pady=5, sticky="w")
+
+        self.tolerated_error_entry = ttk.Entry(self.input_frame, font=("Helvetica", 13))
+        self.tolerated_error_entry.grid(row=3, column=1, padx=5, pady=5, sticky="w")
+
         self.learning_rate_label = ttk.Label(self.input_frame, text="Taxa de aprendizagem:", font=("Helvetica", 13))
-        self.learning_rate_label.grid(row=3, column=0, padx=5, pady=5, sticky="w")
+        self.learning_rate_label.grid(row=4, column=0, padx=5, pady=5, sticky="w")
 
         self.learning_rate_entry = ttk.Entry(self.input_frame, font=("Helvetica", 13))
-        self.learning_rate_entry.grid(row=3, column=1, padx=5, pady=5, sticky="w")
+        self.learning_rate_entry.grid(row=4, column=1, padx=5, pady=5, sticky="w")
 
         self.neurons_label = ttk.Label(self.input_frame, text="Quantidade de neurônios:", font=("Helvetica", 13))
-        self.neurons_label.grid(row=4, column=0, padx=5, pady=5, sticky="w")
+        self.neurons_label.grid(row=5, column=0, padx=5, pady=5, sticky="w")
 
         self.neurons_entry = ttk.Entry(self.input_frame, font=("Helvetica", 13))
-        self.neurons_entry.grid(row=4, column=1, padx=5, pady=5, sticky="w")
+        self.neurons_entry.grid(row=5, column=1, padx=5, pady=5, sticky="w")
 
         self.samples_label = ttk.Label(self.input_frame, text="Quantidade de amostras:", font=("Helvetica", 13))
-        self.samples_label.grid(row=5, column=0, padx=5, pady=5, sticky="w")
+        self.samples_label.grid(row=6, column=0, padx=5, pady=5, sticky="w")
 
         self.samples_entry = ttk.Entry(self.input_frame, font=("Helvetica", 13))
-        self.samples_entry.grid(row=5, column=1, padx=5, pady=5, sticky="w")
+        self.samples_entry.grid(row=6, column=1, padx=5, pady=5, sticky="w")
 
         self.error_value_label = ttk.Label(self.input_frame, text="Valor do erro atual:", font=("Helvetica", 13))
-        self.error_value_label.grid(row=6, column=0, padx=5, pady=5, sticky="w")
+        self.error_value_label.grid(row=7, column=0, padx=5, pady=5, sticky="w")
 
         self.error_value = ttk.Label(self.input_frame, text="0.000", font=("Helvetica", 13))
-        self.error_value.grid(row=6, column=1, padx=5, pady=5, sticky="w")
+        self.error_value.grid(row=7, column=1, padx=5, pady=5, sticky="w")
 
         self.cycles_label = ttk.Label(self.input_frame, text="Número de ciclos:", font=("Helvetica", 13))
-        self.cycles_label.grid(row=7, column=0, padx=5, pady=5, sticky="w")
+        self.cycles_label.grid(row=8, column=0, padx=5, pady=5, sticky="w")
 
         self.cycles_value = ttk.Label(self.input_frame, text="0", font=("Helvetica", 13))
-        self.cycles_value.grid(row=7, column=1, padx=5, pady=5, sticky="w")
+        self.cycles_value.grid(row=8, column=1, padx=5, pady=5, sticky="w")
 
         self.approximate_button = tk.Button(self.input_frame, text="Aproximar", font=("Helvetica", 13))
-        self.approximate_button.grid(row=8, column=0, columnspan=2, pady=5)
+        self.approximate_button.grid(row=9, column=0, columnspan=2, pady=5)
 
 
     def create_plots(self):
@@ -80,11 +86,13 @@ class App(tk.Tk):
         ax1.plot(x, y1)
         ax1.set_title("Verdadeiro")
         self.canvas1 = FigureCanvasTkAgg(self.fig1, master=self.input_frame)
-        self.canvas1.get_tk_widget().grid(row=0, column=2, rowspan=9, padx=(5, 0), pady=5, sticky='E')
+        self.canvas1.get_tk_widget().grid(row=0, column=2, rowspan=10, padx=(5, 0), pady=5, sticky='E')
 
         self.fig2, ax2 = plt.subplots(figsize=(4, 3))
-        ax2.plot(x, y2)
-        ax2.set_title("Aproximação MLP")
+        ax2.plot(x, y1, label='Valor Real')
+        ax2.plot(x, y2, label='Valor Aproximado')
+        ax2.legend(loc='lower center')
+        ax2.set_title("Aproximação MLP x Real")
         self.canvas2 = FigureCanvasTkAgg(self.fig2, master=self.plot_frame)
         self.canvas2.get_tk_widget().grid(row=0, column=0, padx=(0, 5), pady=5, sticky='W')
 
@@ -93,6 +101,7 @@ class App(tk.Tk):
         ax3.set_title("Erro por ciclo")
         self.canvas3 = FigureCanvasTkAgg(self.fig3, master=self.plot_frame)
         self.canvas3.get_tk_widget().grid(row=0, column=1, padx=(5, 0), pady=5, sticky='E')
+
 
 if __name__ == "__main__":
     app = App()
