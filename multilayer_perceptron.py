@@ -1,8 +1,9 @@
 import numpy as np
+import random as rd
+import matplotlib.pyplot as plt
 
-
+ENTRADAS = 1
 class MultilayerPerceptron:
-    ENTRADAS = 1
 
     def __init__(
         self,
@@ -11,7 +12,8 @@ class MultilayerPerceptron:
         x_max: float,
         x_min: float,
         samples: int,
-        tolerated_error: float
+        tolerated_error: float,
+        root
     ) -> None:
         self.alpha = alpha
         self.x_max = x_max
@@ -19,8 +21,11 @@ class MultilayerPerceptron:
         self.samples = samples
         self.neurons = neurons
         self.tolerated_error = tolerated_error
+        self.listaciclo=[]
+        self.listaerro=[]
+        self.root = root
 
-    def _initialize(self):
+    def initialize(self, graph1, graph2, graph3):
         x1 = np.linspace(self.x_min, self.x_max, self.samples)
         x = np.zeros((self.samples, 1))
         for i in range(self.samples):
@@ -83,8 +88,8 @@ class MultilayerPerceptron:
                 errototal = errototal + np.sum(0.5*((target-h)**2))
 
                 deltinhak = (target-h)*(1+h)*(1-h)
-                deltaw = alfa*(np.dot(deltinhak, z))
-                deltaw0 = alfa*deltinhak
+                deltaw = self.alpha*(np.dot(deltinhak, z))
+                deltaw0 = self.alpha*deltinhak
                 deltinhain = np.dot(np.transpose(deltinhak),
                                     np.transpose(wanterior))
                 deltinha = deltinhain*(1+z)*(1-z)
@@ -94,8 +99,8 @@ class MultilayerPerceptron:
                 for k in range(ENTRADAS):
                     xaux[0][k] = x[padrao][k]
 
-                deltav = alfa*np.dot(deltinha2, xaux)
-                deltav0 = alfa*deltinha
+                deltav = self.alpha*np.dot(deltinha2, xaux)
+                deltav0 = self.alpha*deltinha
 
                 vnovo = vanterior+np.transpose(deltav)
                 v0novo = v0anterior+np.transpose(deltav0)
@@ -107,10 +112,10 @@ class MultilayerPerceptron:
                 w0anterior = w0novo
 
             ciclo = ciclo+1
-            listaciclo.append(ciclo)
-            listaerro.append(errototal)
+            self.listaciclo.append(ciclo)
+            self.listaerro.append(errototal)
             print('Ciclo\t Erro')
-            print(ciclo, '\t', errototal)
+            print(ciclo,'\t',errototal)
 
             zin2 = np.zeros((1, self.neurons))
             z2 = np.zeros((1, self.neurons))
@@ -123,8 +128,31 @@ class MultilayerPerceptron:
                     z2 = np.tanh(zin2)
                 yin2 = np.dot(z2, wanterior) + w0anterior
                 y2 = np.tanh(yin2)
-                t2[i][0] = y2
 
-            plt.plot(x, t1, color='red')
-            plt.plot(x, t2, color='blue')
-            plt.show
+                t2[i][0] = y2
+            
+                
+            plt.clf()
+            graph1[1].cla()
+            graph1[1].plot(x, t2)
+            graph1[1].set_title("Função Aproximada")
+            graph1[0].draw()
+            graph1[0].get_tk_widget().grid(row=0, column=2, rowspan=10, padx=(5, 0), pady=5, sticky='E')
+
+            graph2[1].cla()
+            graph2[1].plot(x, t2)
+            graph2[1].plot(x, t1)
+            graph2[1].set_title("Aproximação MLP x Real")
+            graph2[0].draw()
+            graph2[0].get_tk_widget().grid(row=0, column=0, padx=(0, 5), pady=5)
+
+            graph3[1].cla()
+            graph3[1].plot(self.listaciclo, self.listaerro)
+            graph3[1].set_title("Erro por ciclo")
+            graph3[0].draw()
+            graph3[0].get_tk_widget().grid(row=0, column=1, padx=(5, 0), pady=5)
+
+            self.root.update_idletasks()
+            self.root.update()
+
+            

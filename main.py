@@ -4,15 +4,23 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+from multilayer_perceptron import MultilayerPerceptron
+
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
 
         self.title("MLP Aproximação")
-        # self.geometry("900x600")
+        self.resizable(False, False)
 
         self.create_widgets()
         self.create_plots()
+
+    def aproximar(self, _=None):
+        mlp = MultilayerPerceptron(int(self.neurons_entry.get()), float(self.learning_rate_entry.get()), float(self.max_x_entry.get(
+        )), float(self.min_x_entry.get()), int(self.samples_entry.get()), float(self.tolerated_error_entry.get()), self)
+
+        mlp.initialize((self.canvas1, self.ax1), (self.canvas2, self.ax2), (self.canvas3, self.ax3))        
 
     def create_widgets(self):
         self.input_frame = ttk.Frame(self)
@@ -69,36 +77,42 @@ class App(tk.Tk):
         self.cycles_value = ttk.Label(self.input_frame, text="0", font=("Helvetica", 13))
         self.cycles_value.grid(row=8, column=1, padx=5, pady=5, sticky="w")
 
-        self.approximate_button = tk.Button(self.input_frame, text="Aproximar", font=("Helvetica", 13))
+        self.approximate_button = tk.Button(self.input_frame, text="Aproximar", font=("Helvetica", 13), command=self.aproximar)
         self.approximate_button.grid(row=9, column=0, columnspan=2, pady=5)
 
+        self.approximate_button.bind('<Return>', self.aproximar)
+
+        self.debug()
+
+    def debug(self):
+        self.min_x_entry.insert(0, '-1')
+        self.max_x_entry.insert(0, '1')
+        self.tolerated_error_entry.insert(0, '0.05')
+        self.learning_rate_entry.insert(0, '0.005')
+        self.neurons_entry.insert(0, '200')
+        self.samples_entry.insert(0, '50')
 
     def create_plots(self):
-        x = np.linspace(0, 10, 100)
-        y1 = np.sin(x)
-        y2 = np.cos(x)
-        y3 = np.tan(x)
+        start = []
 
         self.plot_frame = ttk.Frame(self)
-        self.plot_frame.pack(side=tk.TOP, pady=10)
+        self.plot_frame.pack(side=tk.TOP, pady=15)
 
-        self.fig1, ax1 = plt.subplots(figsize=(4, 3))
-        ax1.plot(x, y1)
-        ax1.set_title("Verdadeiro")
+        self.fig1, self.ax1 = plt.subplots(figsize=(4, 3))
+        self.ax1.plot(start, start)
+        self.ax1.set_title("Função Aproximada")
         self.canvas1 = FigureCanvasTkAgg(self.fig1, master=self.input_frame)
         self.canvas1.get_tk_widget().grid(row=0, column=2, rowspan=10, padx=(5, 0), pady=5, sticky='E')
 
-        self.fig2, ax2 = plt.subplots(figsize=(4, 3))
-        ax2.plot(x, y1, label='Valor Real')
-        ax2.plot(x, y2, label='Valor Aproximado')
-        ax2.legend(loc='lower center')
-        ax2.set_title("Aproximação MLP x Real")
+        self.fig2, self.ax2 = plt.subplots(figsize=(4, 3))
+        self.ax2.plot(start, start)
+        self.ax2.set_title("Aproximação MLP x Real")
         self.canvas2 = FigureCanvasTkAgg(self.fig2, master=self.plot_frame)
         self.canvas2.get_tk_widget().grid(row=0, column=0, padx=(0, 5), pady=5, sticky='W')
 
-        self.fig3, ax3 = plt.subplots(figsize=(4, 3))
-        ax3.plot(x, y3)
-        ax3.set_title("Erro por ciclo")
+        self.fig3, self.ax3 = plt.subplots(figsize=(4, 3))
+        self.ax3.plot(start, start)
+        self.ax3.set_title("Erro por ciclo")
         self.canvas3 = FigureCanvasTkAgg(self.fig3, master=self.plot_frame)
         self.canvas3.get_tk_widget().grid(row=0, column=1, padx=(5, 0), pady=5, sticky='E')
 
