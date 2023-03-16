@@ -63,7 +63,7 @@ while errotolerado < errototal:
 
     for padrao in range(amostras):
         for j in range(neur):
-            zin[0][j]=np.dot(x[padrao,:], vanterior[:,j]) + v0anterior[0][j]
+            zin2[0][j]=np.dot(x[padrao,:], vanterior[:,j]) + v0anterior[0][j]
         z=np.tanh(zin)
         yin=np.dot(z,wanterior) + w0anterior
         y=np.tanh(yin)
@@ -80,7 +80,7 @@ while errotolerado < errototal:
         deltaw0=alfa*deltinhak
         deltinhain=np.dot(np.transpose(deltinhak),np.transpose(wanterior))
         deltinha=deltinhain*(1+z)*(1-z)
-    
+
         for m in range(neur):
             deltinha2[m][0]=deltinha[0][m]
         for k in range(entradas):
