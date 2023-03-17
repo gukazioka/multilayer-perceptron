@@ -15,6 +15,9 @@ class App(tk.Tk):
         self.title("MLP Aproximação")
         self.resizable(False, False)
 
+        self.frame_root = ttk.Frame(self)
+        self.frame_root.pack(side=tk.TOP)
+
         self.create_widgets()
         self.create_plots()
             
@@ -26,13 +29,13 @@ class App(tk.Tk):
             mlp = MultilayerPerceptron(int(self.neurons_entry.get()), float(self.learning_rate_entry.get()), float(self.max_x_entry.get()), float(
                 self.min_x_entry.get()), int(self.samples_entry.get()), float(self.tolerated_error_entry.get()), self.var_erro, self.var_ciclo, self)
 
-            mlp.initialize((self.canvas1, self.ax1), (self.canvas2, self.ax2), (self.canvas3, self.ax3))
+            mlp.initialize(self.canvas1, self.ax1, self.canvas2, self.ax2, self.canvas3, self.ax3)
         else:
             Notification(self, 'Erro ao aproximar! \nPor favor preencha corretamente os campos!')
 
     def create_widgets(self):
-        self.input_frame = ttk.Frame(self)
-        self.input_frame.pack(side=tk.TOP, anchor="nw", padx=10, pady=10)
+        self.input_frame = ttk.Frame(self.frame_root)
+        self.input_frame.pack(side=tk.LEFT, anchor="nw", padx=10, pady=10)
 
         self.function_label = ttk.Label(
             self.input_frame, text="Função: f(x) = sen(x/2) ∙ cos(2x)", font=("Helvetica", 13))
@@ -130,27 +133,38 @@ class App(tk.Tk):
     def create_plots(self):
         start = []
 
-        self.plot_frame = ttk.Frame(self)
-        self.plot_frame.pack(side=tk.TOP, pady=15)
+        self.plot_frame1 = ttk.Frame(self.frame_root)
+        self.plot_frame1.pack(side=tk.RIGHT, anchor="e", padx=(90, 0))
 
-        self.fig1, self.ax1 = plt.subplots(figsize=(4, 3))
+        self.plot_frame2 = ttk.Frame(self)
+        self.plot_frame2.pack(side=tk.TOP, pady=15)
+
+        self.fig1, self.ax1 = plt.subplots(figsize=(5,4))
         self.ax1.plot(start, start)
         self.ax1.set_title("Função Aproximada")
-        self.canvas1 = FigureCanvasTkAgg(self.fig1, master=self.input_frame)
-        self.canvas1.get_tk_widget().grid(row=0, column=2, rowspan=10,
-                                          padx=(5, 0), pady=5, sticky='E')
+        self.ax1.set_xlabel('x')
+        self.ax1.set_ylabel('f(x)')
+        self.ax1.yaxis.set_label_position('right')
+        self.canvas1 = FigureCanvasTkAgg(self.fig1, master=self.plot_frame1)
+        self.canvas1.get_tk_widget().grid(row=0, column=2, rowspan=10, pady=5, sticky='E')
 
-        self.fig2, self.ax2 = plt.subplots(figsize=(4, 3))
+        self.fig2, self.ax2 = plt.subplots(figsize=(5,4))
         self.ax2.plot(start, start)
         self.ax2.set_title("Aproximação MLP x Real")
-        self.canvas2 = FigureCanvasTkAgg(self.fig2, master=self.plot_frame)
-        self.canvas2.get_tk_widget().grid(row=0, column=0, padx=(0, 5), pady=5, sticky='W')
+        self.ax2.set_xlabel('x')
+        self.ax2.set_ylabel('f(x)')
+        self.ax2.yaxis.set_label_position('right')
+        self.canvas2 = FigureCanvasTkAgg(self.fig2, master=self.plot_frame2)
+        self.canvas2.get_tk_widget().grid(row=0, column=0, padx=5, pady=5, sticky='W')
 
-        self.fig3, self.ax3 = plt.subplots(figsize=(4, 3))
+        self.fig3, self.ax3 = plt.subplots(figsize=(5,4))
         self.ax3.plot(start, start)
         self.ax3.set_title("Erro por ciclo")
-        self.canvas3 = FigureCanvasTkAgg(self.fig3, master=self.plot_frame)
-        self.canvas3.get_tk_widget().grid(row=0, column=1, padx=(5, 0), pady=5, sticky='E')
+        self.ax3.set_xlabel('Ciclo')
+        self.ax3.set_ylabel('Erro')
+        self.ax3.yaxis.set_label_position('right')
+        self.canvas3 = FigureCanvasTkAgg(self.fig3, master=self.plot_frame2)
+        self.canvas3.get_tk_widget().grid(row=0, column=1, padx=5, pady=5, sticky='E')
 
 
 if __name__ == "__main__":

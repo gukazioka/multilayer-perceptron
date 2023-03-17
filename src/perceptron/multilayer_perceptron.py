@@ -34,7 +34,7 @@ class MultilayerPerceptron:
         self.var_ciclo = var_ciclo
         self.root = root
 
-    def initialize(self, graph1, graph2, graph3):
+    def initialize(self, canvas1, ax1, canvas2, ax2, canvas3, ax3):
         x1 = np.linspace(self.x_min, self.x_max, self.samples)
         x = np.zeros((self.samples, 1))
         for i in range(self.samples):
@@ -124,8 +124,14 @@ class MultilayerPerceptron:
             ciclo = ciclo+1
             self.listaciclo.append(ciclo)
             self.listaerro.append(errototal)
-            print('Ciclo\t Erro')
-            print(ciclo, '\t', errototal)
+
+            ax3.cla()
+            ax3.plot(self.listaciclo, self.listaerro)
+            ax3.set_title("Erro por ciclo")
+            ax3.set_xlabel('Ciclo')
+            ax3.set_ylabel('Erro')
+            ax3.yaxis.set_label_position('right')
+            canvas3.draw()
 
             zin2 = np.zeros((1, self.neurons))
             z2 = np.zeros((1, self.neurons))
@@ -142,34 +148,24 @@ class MultilayerPerceptron:
                 t2[i][0] = y2
 
             self.var_erro.set("{:.6f}".format((errototal)))
-            self.error_value = ttk.Label(
-                self.root, text=self.var_erro, font=("Helvetica", 13))
-            
             self.var_ciclo.set(ciclo)
-            self.error_ciclo = ttk.Label(
-                self.root, text=self.var_erro, font=("Helvetica", 13))
 
-            graph1[1].cla()
-            graph1[1].plot(x, t2)
-            graph1[1].set_title("Função Aproximada")
-            graph1[0].draw()
-            graph1[0].get_tk_widget().grid(row=0, column=2, rowspan=10,
-                                           padx=(5, 0), pady=5, sticky='E')
+            ax1.cla()
+            ax1.plot(x, t2)
+            ax1.set_title("Função Aproximada")
+            ax1.set_xlabel('x')
+            ax1.set_ylabel('f(x)')
+            ax1.yaxis.set_label_position('right')
+            canvas1.draw()
 
-            graph2[1].cla()
-            graph2[1].plot(x, t2)
-            graph2[1].plot(x, t1)
-            graph2[1].set_title("Aproximação MLP x Real")
-            graph2[0].draw()
-            graph2[0].get_tk_widget().grid(
-                row=0, column=0, padx=(0, 5), pady=5)
-
-            graph3[1].cla()
-            graph3[1].plot(self.listaciclo, self.listaerro)
-            graph3[1].set_title("Erro por ciclo")
-            graph3[0].draw()
-            graph3[0].get_tk_widget().grid(
-                row=0, column=1, padx=(5, 0), pady=5)
+            ax2.cla()
+            ax2.plot(x, t2)
+            ax2.plot(x, t1)
+            ax2.set_title("Aproximação MLP x Real")
+            ax2.set_xlabel('x')
+            ax2.set_ylabel('f(x)')
+            ax2.yaxis.set_label_position('right')
+            canvas2.draw()
 
             self.root.update_idletasks()
             self.root.update()
