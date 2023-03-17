@@ -1,8 +1,13 @@
+from tkinter import ttk
 import numpy as np
 import random as rd
 import matplotlib.pyplot as plt
+import tkinter as tk
+from tkinter import Entry, StringVar
 
 ENTRADAS = 1
+
+
 class MultilayerPerceptron:
 
     def __init__(
@@ -13,6 +18,8 @@ class MultilayerPerceptron:
         x_min: float,
         samples: int,
         tolerated_error: float,
+        var_erro: float,
+        var_ciclo: int,
         root
     ) -> None:
         self.alpha = alpha
@@ -21,8 +28,10 @@ class MultilayerPerceptron:
         self.samples = samples
         self.neurons = neurons
         self.tolerated_error = tolerated_error
-        self.listaciclo=[]
-        self.listaerro=[]
+        self.listaciclo = []
+        self.listaerro = []
+        self.var_erro = var_erro
+        self.var_ciclo = var_ciclo
         self.root = root
 
     def initialize(self, graph1, graph2, graph3):
@@ -75,7 +84,8 @@ class MultilayerPerceptron:
             errototal = 0
             for padrao in range(amostras):
                 for j in range(self.neurons):
-                    zin[0][j] = np.dot(x[padrao, :], vanterior[:, j]) + v0anterior[0][j]
+                    zin[0][j] = np.dot(
+                        x[padrao, :], vanterior[:, j]) + v0anterior[0][j]
                 z = np.tanh(zin)
                 yin = np.dot(z, wanterior) + w0anterior
                 y = np.tanh(yin)
@@ -115,7 +125,7 @@ class MultilayerPerceptron:
             self.listaciclo.append(ciclo)
             self.listaerro.append(errototal)
             print('Ciclo\t Erro')
-            print(ciclo,'\t',errototal)
+            print(ciclo, '\t', errototal)
 
             zin2 = np.zeros((1, self.neurons))
             z2 = np.zeros((1, self.neurons))
@@ -130,29 +140,37 @@ class MultilayerPerceptron:
                 y2 = np.tanh(yin2)
 
                 t2[i][0] = y2
+
+            self.var_erro.set("{:.6f}".format((errototal)))
+            self.error_value = ttk.Label(
+                self.root, text=self.var_erro, font=("Helvetica", 13))
             
-                
+            self.var_ciclo.set(ciclo)
+            self.error_ciclo = ttk.Label(
+                self.root, text=self.var_erro, font=("Helvetica", 13))
+
             plt.clf()
             graph1[1].cla()
             graph1[1].plot(x, t2)
             graph1[1].set_title("Função Aproximada")
             graph1[0].draw()
-            graph1[0].get_tk_widget().grid(row=0, column=2, rowspan=10, padx=(5, 0), pady=5, sticky='E')
+            graph1[0].get_tk_widget().grid(row=0, column=2, rowspan=10,
+                                           padx=(5, 0), pady=5, sticky='E')
 
             graph2[1].cla()
             graph2[1].plot(x, t2)
             graph2[1].plot(x, t1)
             graph2[1].set_title("Aproximação MLP x Real")
             graph2[0].draw()
-            graph2[0].get_tk_widget().grid(row=0, column=0, padx=(0, 5), pady=5)
+            graph2[0].get_tk_widget().grid(
+                row=0, column=0, padx=(0, 5), pady=5)
 
             graph3[1].cla()
             graph3[1].plot(self.listaciclo, self.listaerro)
             graph3[1].set_title("Erro por ciclo")
             graph3[0].draw()
-            graph3[0].get_tk_widget().grid(row=0, column=1, padx=(5, 0), pady=5)
+            graph3[0].get_tk_widget().grid(
+                row=0, column=1, padx=(5, 0), pady=5)
 
             self.root.update_idletasks()
             self.root.update()
-
-            
