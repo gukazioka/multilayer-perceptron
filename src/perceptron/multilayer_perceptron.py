@@ -149,7 +149,6 @@ class MultilayerPerceptron:
             self.error_ciclo = ttk.Label(
                 self.root, text=self.var_erro, font=("Helvetica", 13))
 
-            plt.clf()
             graph1[1].cla()
             graph1[1].plot(x, t2)
             graph1[1].set_title("Função Aproximada")

@@ -1,10 +1,11 @@
 import tkinter as tk
-from tkinter import Entry, StringVar, ttk
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+from tkinter import StringVar, ttk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from src.perceptron.multilayer_perceptron import MultilayerPerceptron
+from src.shared.notify import Notification
 
 
 class App(tk.Tk):
@@ -16,13 +17,18 @@ class App(tk.Tk):
 
         self.create_widgets()
         self.create_plots()
-
+            
     def aproximar(self, _=None):
-        mlp = MultilayerPerceptron(int(self.neurons_entry.get()), float(self.learning_rate_entry.get()), float(self.max_x_entry.get()), float(
-            self.min_x_entry.get()), int(self.samples_entry.get()), float(self.tolerated_error_entry.get()), self.var_erro, self.var_ciclo, self)
+        if(self.neurons_entry.get() != '' and self.learning_rate_entry.get() != '' and
+                self.max_x_entry.get() != '' and self.min_x_entry.get() != '' and
+                self.samples_entry.get() != '' and self.tolerated_error_entry.get() != ''):
 
-        mlp.initialize((self.canvas1, self.ax1), (self.canvas2,
-                       self.ax2), (self.canvas3, self.ax3))
+            mlp = MultilayerPerceptron(int(self.neurons_entry.get()), float(self.learning_rate_entry.get()), float(self.max_x_entry.get()), float(
+                self.min_x_entry.get()), int(self.samples_entry.get()), float(self.tolerated_error_entry.get()), self.var_erro, self.var_ciclo, self)
+
+            mlp.initialize((self.canvas1, self.ax1), (self.canvas2, self.ax2), (self.canvas3, self.ax3))
+        else:
+            Notification(self, 'Erro ao aproximar! \nPor favor preencha corretamente os campos!')
 
     def create_widgets(self):
         self.input_frame = ttk.Frame(self)
