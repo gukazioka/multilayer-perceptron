@@ -2,8 +2,6 @@ from tkinter import ttk
 import numpy as np
 import random as rd
 import matplotlib.pyplot as plt
-import tkinter as tk
-from tkinter import Entry, StringVar
 
 ENTRADAS = 1
 
