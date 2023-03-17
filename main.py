@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-from multilayer_perceptron import MultilayerPerceptron
+from src.perceptron.multilayer_perceptron import MultilayerPerceptron
 
 
 class App(tk.Tk):
